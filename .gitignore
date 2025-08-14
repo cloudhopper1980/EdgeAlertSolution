@@ -4,6 +4,13 @@
 # Azure Functions localsettings file
 local.settings.json
 
+# Development configuration files with secrets
+appsettings.Development.json
+appsettings.Local.json
+*.secret.json
+.env
+.env.local
+
 # Azurite storage emulator files
 __azurite_db_*.json
 __blobstorage__/

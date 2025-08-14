@@ -25,12 +25,11 @@ namespace EdgeAlertSignalClient.Handlers
 
     public partial class AzureHandler : ObservableObject
     {
-        // Key Vault details
-        private const string KeyVaultUriString = "https://edgestoragevault.vault.azure.net/";
-
-        private const string TenantId = "4ab91383-3140-4414-942f-74e6dfe5035f";
-        private const string ClientId = "187b13e7-ad4d-486e-86a1-4ae15dd5b65d";
-        private const string ClientSecret = ""; // TODO: Move to secure storage (environment variable or Key Vault)
+        // Key Vault details - these can be overridden by environment variables
+        private readonly string KeyVaultUriString;
+        private readonly string TenantId;
+        private readonly string ClientId;
+        private readonly string ClientSecret;
 
 
         // Nullable settings object, only populated on success
@@ -47,6 +46,25 @@ namespace EdgeAlertSignalClient.Handlers
         public AzureHandler(ILogger<AzureHandler> log)
         {
             _log = log;
+            
+            // Load configuration from environment variables with fallbacks
+            KeyVaultUriString = Environment.GetEnvironmentVariable("AZURE_KEYVAULT_URI") 
+                ?? "https://edgestoragevault.vault.azure.net/";
+            
+            TenantId = Environment.GetEnvironmentVariable("AZURE_TENANT_ID") 
+                ?? "4ab91383-3140-4414-942f-74e6dfe5035f";
+            
+            ClientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID") 
+                ?? "187b13e7-ad4d-486e-86a1-4ae15dd5b65d";
+            
+            ClientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET") 
+                ?? "";  // No default for security reasons
+            
+            if (string.IsNullOrEmpty(ClientSecret))
+            {
+                _log.LogWarning("Azure Client Secret not configured. Set AZURE_CLIENT_SECRET environment variable.");
+            }
+            
             // Setup Lazy Task to call the internal initialization method
             _initializationLazyTask = new Lazy<Task<bool>>(InitializeInternalAsync, LazyThreadSafetyMode.ExecutionAndPublication);
             _log.LogInformation("AzureHandler created. Initialization task setup.");
