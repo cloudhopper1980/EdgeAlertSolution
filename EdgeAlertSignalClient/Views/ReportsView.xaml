@@ -1,0 +1,945 @@
+﻿<UserControl x:Class="EdgeAlertSignalClient.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:EdgeAlertSignalClient.Views" 
+             xmlns:converters="clr-namespace:EdgeAlertSignalClient.Converters" 
+             xmlns:viewmodels="clr-namespace:EdgeAlertSignalClient.ViewModels" 
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:ReportsViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--Specify the relative path to your Theme folder and the TabTheme.xaml file-->
+                <ResourceDictionary Source="../Theme/TabTheme.xaml"/>
+                <ResourceDictionary Source="../Theme/MenuButtonTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <!-- CollectionViewSource for AlertHistory grouping -->
+            <CollectionViewSource x:Key="GroupedAlertHistory" Source="{Binding AlertHistoryListView}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="Practice"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+            <!-- CollectionViewSource for FireDrill grouping -->
+            <CollectionViewSource x:Key="GroupedUsers" Source="{Binding EdgeUserListView}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="ODS"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+            <!-- CollectionViewSource for FireDrill grouping -->
+            <CollectionViewSource x:Key="GroupedFireDrill" Source="{Binding EdgeFireDrillListView}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="ODS"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+            <!-- CollectionViewSource for SystemInfo grouping -->
+            <CollectionViewSource x:Key="GroupedSystemInfo" Source="{Binding SystemInfoList}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="ODS"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+            <!-- CollectionViewSource for Active System Info grouping -->
+            <CollectionViewSource x:Key="GroupedActiveSystemInfo" Source="{Binding ActiveSystemInfoList}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="ODS"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+
+            <!-- CollectionViewSource for Archived System Info grouping -->
+            <CollectionViewSource x:Key="GroupedArchivedSystemInfo" Source="{Binding ArchivedSystemInfoList}">
+                <CollectionViewSource.GroupDescriptions>
+                    <PropertyGroupDescription PropertyName="ODS"/>
+                </CollectionViewSource.GroupDescriptions>
+            </CollectionViewSource>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <!-- Tab Control -->
+        <TabControl SelectedIndex="{Binding ActiveTab}">
+            <TabItem Header="Users">
+                <ListView x:Name="UserListView" 
+              ItemsSource="{Binding Source={StaticResource GroupedUsers}}"
+              ItemContainerStyle="{StaticResource ReportViewListViewItemStyle}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible"
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.Resources>
+                        <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=UserListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.231}" Header="Name">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="UserName"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding UserName}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=UserListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.21}" Header="Device">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="HostName"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding HostName}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=UserListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.231}" Header="Room">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="Room"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Room}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=UserListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Logged In">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="LoggedIn"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding LoggedIn}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=UserListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Last Online">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="LastOnline"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding LastOnline}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="18" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                </ListView>
+            </TabItem>
+            <TabItem Header="Fire Drill List">
+                <ListView x:Name="FireDrillListView" 
+              ItemsSource="{Binding Source={StaticResource GroupedFireDrill}}"
+              ItemContainerStyle="{StaticResource ReportViewListViewItemStyle}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible"
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.Resources>
+                        <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=FireDrillListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.231}" Header="Name">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="UserName"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding UserName}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=FireDrillListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.21}" Header="Device">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="HostName"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding HostName}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=FireDrillListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.231}" Header="Room">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="Room"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Room}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=FireDrillListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Logged In">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="LoggedIn"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding LoggedIn}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=FireDrillListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Last Online">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                        <Setter Property="CommandParameter" Value="LastOnline"/>
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding LastOnline}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="18" />
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </ListView.GroupStyle>
+                </ListView>
+            </TabItem>
+            <TabItem Header="Alert History">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Date Filters -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,5">
+                        <TextBlock Text="Date From:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <DatePicker SelectedDate="{Binding DateFrom, Mode=TwoWay}" DisplayDateEnd="{x:Static sys:DateTime.Now}"/>
+                        <TextBlock Text="Date To:" VerticalAlignment="Center" Margin="10,0,5,0"/>
+                        <DatePicker SelectedDate="{Binding DateTo, Mode=TwoWay}" DisplayDateEnd="{x:Static sys:DateTime.Now}"/>
+                    </StackPanel>
+
+                    <ListView x:Name="AlertHistoryListView" 
+                  Grid.Row="1"
+                  ItemsSource="{Binding Source={StaticResource GroupedAlertHistory}}"
+                  ItemContainerStyle="{StaticResource ReportViewListViewItemStyle}"
+                              ScrollViewer.HorizontalScrollBarVisibility="Visible"
+          ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListView.Resources>
+                            <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
+                        </ListView.Resources>
+                        <ListView.View>
+                            <GridView>
+                                <!-- Raised When Column -->
+                                <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=AlertHistoryListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.145}" Header="Raised When">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                            <Setter Property="CommandParameter" Value="RaisedWhen"/>
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding RaisedWhen}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Raised By Column -->
+                                <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=AlertHistoryListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.18}" Header="Raised By">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                            <Setter Property="CommandParameter" Value="RaisedBy"/>
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding RaisedBy}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Device Column -->
+                                <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=AlertHistoryListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.178}" Header="Device">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                            <Setter Property="CommandParameter" Value="Device"/>
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Device}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Location Column -->
+                                <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=AlertHistoryListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.19}" Header="Location">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                            <Setter Property="CommandParameter" Value="Location"/>
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Location}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Responder Column -->
+                                <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=AlertHistoryListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.18}" Header="Responder">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                            <Setter Property="CommandParameter" Value="Responder"/>
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Responder}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <!-- Time to Respond Column -->
+                                <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=AlertHistoryListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.12}" Header="Time to Respond">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"/>
+                                            <Setter Property="CommandParameter" Value="TimeToRespond"/>
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding TimeToRespond}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="18" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <!-- System Info Tab -->
+            <TabItem Header="System Info">
+                <TabControl>
+                    <!-- Active Machines Tab -->
+                    <TabItem Header="Active Machines">
+                        <ListView x:Name="ActiveSystemInfoListView" 
+                      ItemsSource="{Binding Source={StaticResource GroupedActiveSystemInfo}}"
+                      ItemContainerStyle="{StaticResource ReportViewListViewItemStyle}"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                            <ListView.Resources>
+                                <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
+                            </ListView.Resources>
+                            <ListView.View>
+                                    <GridView>
+                                        <!-- Hostname Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Hostname">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="HostName,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding HostName}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Serial Number Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Serial">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="SerialNumber,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding SerialNumber}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- IP Address Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.11}" Header="IP Address">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="IpAddress,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding IpAddress}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Room Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Room">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Room,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Room}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Username Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Name">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="UserName,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UserName}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Operating System Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.30}" Header="Operating System">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="OperatingSystem,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding OperatingSystem}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Hard Drive Total Space Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.1}" Header="HD Total (GB)">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="HardDriveTotalSpace,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding HardDriveTotalSpace}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Hard Drive Free Space Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.1}" Header="HD Free (GB)">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="HardDriveFreeSpace,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding HardDriveFreeSpace}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- RAM Capacity Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.08}" Header="RAM (GB)">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="RamCapacity,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding RamCapacity}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Manufacturer Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.20}" Header="Manufacturer">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Manufacturer,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Manufacturer}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Model Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.10}" Header="Model">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Model,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Model}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Logged In Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.10}" Header="Logged In">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="LoggedIn,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding LoggedIn}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Last Online Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.10}" Header="Last Online">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="LastOnline,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding LastOnline}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- EdgeAlert Version Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ActiveSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.09}" Header="EdgeAlert Version">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Version,Active" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Version}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="18" />
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                        </ListView>
+                    </TabItem>
+
+                    <!-- Archived Machines Tab -->
+                    <TabItem Header="Archived Machines">
+                        <ListView x:Name="ArchivedSystemInfoListView" 
+                      ItemsSource="{Binding Source={StaticResource GroupedArchivedSystemInfo}}"
+                      ItemContainerStyle="{StaticResource ReportViewListViewItemStyle}"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                      ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                            <ListView.Resources>
+                                <converters:PercentageWidthConverter x:Key="PercentageWidthConverter" />
+                            </ListView.Resources>
+                            <ListView.View>
+                                    <GridView>
+                                        <!-- Hostname Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Hostname">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="HostName,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding HostName}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                            <!-- Serial Number Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Serial">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="SerialNumber,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding SerialNumber}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- IP Address Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.11}" Header="IP Address">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="IpAddress,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding IpAddress}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Room Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Room">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Room,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Room}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Username Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.15}" Header="Name">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="UserName,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UserName}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Operating System Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.30}" Header="Operating System">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="OperatingSystem,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding OperatingSystem}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Hard Drive Total Space Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.1}" Header="HD Total (GB)">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="HardDriveTotalSpace,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding HardDriveTotalSpace}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Hard Drive Free Space Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.1}" Header="HD Free (GB)">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="HardDriveFreeSpace,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding HardDriveFreeSpace}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- RAM Capacity Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.08}" Header="RAM (GB)">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="RamCapacity,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding RamCapacity}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Manufacturer Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.20}" Header="Manufacturer">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Manufacturer,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Manufacturer}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Model Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.10}" Header="Model">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Model,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Model}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Logged In Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.10}" Header="Logged In">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="LoggedIn,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding LoggedIn}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- Last Online Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.10}" Header="Last Online">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="LastOnline,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding LastOnline}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <!-- EdgeAlert Version Column -->
+                                        <GridViewColumn Width="{Binding Path=ActualWidth, ElementName=ArchivedSystemInfoListView, Converter={StaticResource PercentageWidthConverter}, ConverterParameter=0.09}" Header="EdgeAlert Version">
+                                            <GridViewColumn.HeaderContainerStyle>
+                                                <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                                    <Setter Property="Command" Value="{Binding DataContext.SortColumnCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                                    <Setter Property="CommandParameter" Value="Version,Archived" />
+                                                </Style>
+                                            </GridViewColumn.HeaderContainerStyle>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Version}" />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="18" />
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                        </ListView>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+        </TabControl>
+
+        <!-- Bottom Row Left Empty for Your Command Controls -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- ComboBox for selecting export format -->
+            <ComboBox Grid.Column="1"
+              SelectedValue="{Binding SelectedExportType, Mode=TwoWay}"
+              SelectedValuePath="Content"
+              Width="150"
+              Height="30"
+              Margin="0,0,10,0"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Center"
+              VerticalContentAlignment="Center"
+              HorizontalContentAlignment="Center">
+                <ComboBoxItem Content="Excel"/>
+                <ComboBoxItem Content="Word"/>
+                <!-- Inline Style based on your existing visibility style -->
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox">
+                        <!-- Default display: white background, blue text -->
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Foreground" Value="#004166"/>
+                    </Style>
+                </ComboBox.Style>
+                <!-- Define the style for the dropdown items -->
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <!-- Default dropdown items: light blue background, blue text -->
+                        <Setter Property="Background" Value="LightBlue"/>
+                        <Setter Property="Foreground" Value="#004166"/>
+                        <Style.Triggers>
+                            <!-- Hover effect: blue background with white text -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                                <Setter Property="Foreground" Value="#004166"/>
+                            </Trigger>
+                            <!-- Selected item effect: blue background with white text -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="#004166"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+
+            <Button Content="Export" 
+                Command="{Binding ExportCommand}"
+                CommandParameter="{Binding SelectedExportType}"
+                IsEnabled="{Binding ButtonsEnabled}"
+                Width="100" 
+                Height="30" 
+                Grid.Column="2"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                FontWeight="Bold"/>
+            <Button Content="Print" 
+                Command="{Binding PrintCommand}"
+                CommandParameter="{Binding SelectedExportType}"
+                IsEnabled="{Binding ButtonsEnabled}"
+                Width="100" 
+                Height="30" 
+                Grid.Column="3"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                FontWeight="Bold"/>
+            <Button Content="Refresh" 
+                Command="{Binding RefreshCommand}"
+                CommandParameter="{Binding SelectedExportType}"
+                IsEnabled="{Binding ButtonsEnabled}"
+                Width="100" 
+                Height="30" 
+                Grid.Column="0"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                FontWeight="Bold"/>
+
+        </Grid>
+
+    </Grid>
+</UserControl>

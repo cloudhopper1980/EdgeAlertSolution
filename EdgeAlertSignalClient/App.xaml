@@ -1,0 +1,27 @@
+﻿<Application x:Class="EdgeAlertSignalClient.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:EdgeAlertSignalClient"
+             xmlns:converters="clr-namespace:EdgeAlertSignalClient.Converters"
+             Startup="OnStartup">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Theme/Colours.xaml" />
+                <ResourceDictionary Source="Theme/TabTheme.xaml"/>
+                <ResourceDictionary Source="Theme/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="Theme/GridViewTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:VisibilityBooleanConverter x:Key="VisibilityBooleanConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:ScreenWidthToWindowLeftConverter x:Key="ScreenWidthToWindowLeftConverter"/>
+            <converters:ScreenHeightToWindowTopConverter x:Key="ScreenHeightToWindowTopConverter"/>
+
+            <converters:BooleanToStringConverter x:Key="BooleanToOnOffConverter" TrueValue="ON" FalseValue="OFF"/>
+            <converters:NullableBooleanToIndeterminateConverter x:Key="NullableBooleanToIndeterminateConverter"/>
+            <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

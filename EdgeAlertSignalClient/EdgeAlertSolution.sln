@@ -1,0 +1,107 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33103.201
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdgeAlertSignalClient", "EdgeAlertSignalClient.csproj", "{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgeAlertFunc", "..\EdgeAlertFunc\EdgeAlertFunc.csproj", "{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdgebitsService", "..\EdgebitsService\EdgebitsService.csproj", "{1DCE3346-EEB2-4273-BCCB-028BC23462B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		EdgeAlertSignalClient1|Any CPU = EdgeAlertSignalClient1|Any CPU
+		EdgeAlertSignalClient1|x64 = EdgeAlertSignalClient1|x64
+		EdgeAlertSignalClient1|x86 = EdgeAlertSignalClient1|x86
+		EdgeAlertSignalClient2|Any CPU = EdgeAlertSignalClient2|Any CPU
+		EdgeAlertSignalClient2|x64 = EdgeAlertSignalClient2|x64
+		EdgeAlertSignalClient2|x86 = EdgeAlertSignalClient2|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient1|Any CPU.ActiveCfg = EdgeAlertSignalClient1|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient1|Any CPU.Build.0 = EdgeAlertSignalClient1|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient1|x64.ActiveCfg = EdgeAlertSignalClient1|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient1|x64.Build.0 = EdgeAlertSignalClient1|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient1|x86.ActiveCfg = EdgeAlertSignalClient1|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient1|x86.Build.0 = EdgeAlertSignalClient1|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient2|Any CPU.ActiveCfg = EdgeAlertSignalClient2|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient2|Any CPU.Build.0 = EdgeAlertSignalClient2|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient2|x64.ActiveCfg = EdgeAlertSignalClient2|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient2|x64.Build.0 = EdgeAlertSignalClient2|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient2|x86.ActiveCfg = EdgeAlertSignalClient2|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.EdgeAlertSignalClient2|x86.Build.0 = EdgeAlertSignalClient2|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Release|x64.Build.0 = Release|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD2F27A0-B200-4C43-BEF9-2845CBB658EA}.Release|x86.Build.0 = Release|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Debug|x64.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Debug|x86.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient1|Any CPU.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient1|Any CPU.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient1|x64.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient1|x64.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient1|x86.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient1|x86.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient2|Any CPU.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient2|Any CPU.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient2|x64.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient2|x64.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient2|x86.ActiveCfg = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.EdgeAlertSignalClient2|x86.Build.0 = Debug|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Release|x64.ActiveCfg = Release|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Release|x64.Build.0 = Release|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Release|x86.ActiveCfg = Release|Any CPU
+		{565DF3E8-FB89-4A9A-A8EF-F64289E730DC}.Release|x86.Build.0 = Release|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Debug|x64.Build.0 = Debug|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Debug|x86.Build.0 = Debug|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient1|Any CPU.ActiveCfg = EdgeAlertSignalClient1|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient1|Any CPU.Build.0 = EdgeAlertSignalClient1|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient1|x64.ActiveCfg = EdgeAlertSignalClient1|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient1|x64.Build.0 = EdgeAlertSignalClient1|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient1|x86.ActiveCfg = EdgeAlertSignalClient1|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient1|x86.Build.0 = EdgeAlertSignalClient1|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient2|Any CPU.ActiveCfg = EdgeAlertSignalClient2|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient2|Any CPU.Build.0 = EdgeAlertSignalClient2|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient2|x64.ActiveCfg = EdgeAlertSignalClient2|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient2|x64.Build.0 = EdgeAlertSignalClient2|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient2|x86.ActiveCfg = EdgeAlertSignalClient2|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.EdgeAlertSignalClient2|x86.Build.0 = EdgeAlertSignalClient2|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Release|x64.ActiveCfg = Release|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Release|x64.Build.0 = Release|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{1DCE3346-EEB2-4273-BCCB-028BC23462B8}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0364A2B1-E74F-47F2-98E8-42D9078B2C60}
+	EndGlobalSection
+EndGlobal

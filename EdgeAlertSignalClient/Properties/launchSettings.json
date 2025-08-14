@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "EdgeAlertSignalClient1": {
+      "commandName": "Project",
+      "commandLineArgs": "Clark 10.1.100.1 bridgend.NHS.uk"
+    },
+    "EdgeAlertSignalClient2": {
+      "commandName": "Project",
+      "commandLineArgs": "Simon.Evans.Test 10.75.130.1 Glos.Nhs.uk"
+    },
+    "Debug": {
+      "commandName": "Project",
+      "commandLineArgs": "A.Simon.Test2 10.1.200.1 bridgend2.NHS.uk"
+    },
+    "Glos WFH": {
+      "commandName": "Project",
+      "commandLineArgs": "SimonEvans.Test 192.168.0.100 Glos.Nhs.uk"
+    }
+  }
+}

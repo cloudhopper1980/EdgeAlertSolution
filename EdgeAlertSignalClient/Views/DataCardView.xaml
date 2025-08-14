@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="EdgeAlertSignalClient.Views.DataCardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:EdgeAlertSignalClient.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="100" d:DesignWidth="180"
+             MinWidth="150">
+    <UserControl.Resources>
+        <Style x:Key="CardBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#B0C4DE"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" Color="Gray" Opacity="0.3" BlurRadius="5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="CardTitleStyle">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#4682B4"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="CardValueStyle">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#004166"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource CardBorderStyle}">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+            <TextBlock Text="{Binding CardTitle, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Style="{StaticResource CardTitleStyle}"/>
+            <TextBlock Text="{Binding CardValue, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Style="{StaticResource CardValueStyle}"/>
+        </StackPanel>
+    </Border>
+</UserControl>

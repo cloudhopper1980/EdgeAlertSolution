@@ -1,0 +1,191 @@
+﻿<Window x:Class="EdgeAlertSignalClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EdgeAlertSignalClient"
+        xmlns:views="clr-namespace:EdgeAlertSignalClient.Views"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="{Binding MainWindowTitle}" Height="570" Width="1100" MinHeight="570" MinWidth="900"
+        Background="#E2F0D9"
+        WindowStyle="None"
+        ShowInTaskbar="{Binding MainWindowShowInTaskBar}"
+        Visibility="{Binding MainWindowVisibility}"
+        WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip"
+        Icon="Resources/EdgeAlertIcon.ico">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ViewLoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.ColumnSpan="2"
+                Background="#FF647D1E"
+                MouseDown="Border_MouseDown">
+
+            <Grid HorizontalAlignment="Stretch">
+                <Label Content="{Binding MainWindowTitle}"
+                       Foreground="White"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+
+                <StackPanel HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+
+                    <Button x:Name="AudioDeviceButton"
+                            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Select Alert Output Device"
+                            Height="20" Width="20" Margin="0,0,5,0" Padding="2"
+                            Click="AudioDeviceButton_Click" VerticalAlignment="Center">
+                        <Image Source="/Resources/Audio.png" Stretch="Uniform"/>
+                        <Button.ContextMenu>
+                            <ContextMenu x:Name="AudioDeviceContextMenu"
+                                         DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}"
+                                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                                         ItemsSource="{Binding AvailableAudioDevices}"
+                                         StaysOpen="False">
+
+                                <ContextMenu.ItemContainerStyle>
+                                    <Style TargetType="MenuItem">
+                                        <Setter Property="Header" Value="{Binding Name}" />
+                                        <Setter Property="Command" Value="{Binding DataContext.SelectAudioDeviceCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                                        <Setter Property="CommandParameter" Value="{Binding Id}" />
+                                        <Setter Property="IsCheckable" Value="True" />
+                                        <Setter Property="IsChecked" Value="{Binding IsSelected}" />
+                                        <Setter Property="ToolTip" Value="{Binding Id}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsAvailable}" Value="False">
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Setter Property="ToolTip" Value="{Binding Id, StringFormat='{}Unavailable: {0}'}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContextMenu.ItemContainerStyle>
+
+                                <ContextMenu.Items>
+                                </ContextMenu.Items>
+
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                    <Border Height="15"
+                            Width="15"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            BorderBrush="Transparent"
+                            Margin="0,0,5,2"
+                            Grid.Column="1">
+                        <Border.InputBindings>
+                            <MouseBinding MouseAction="LeftClick" Command="{Binding WindowStateMinimiseCommand}" />
+                        </Border.InputBindings>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Width="15"
+                                   Height="15"
+                                   Source="/Resources/Minimise.png"/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Background="#E2F0D9"
+              Grid.Row="1" Grid.Column="0">
+            <StackPanel>
+                <RadioButton Content="EdgeAlert"
+             Height="50"
+             Foreground="#004166"
+             FontSize="24"
+             Style="{StaticResource MenuButtonTheme}"
+             Command="{Binding EdgeAlertButtonCommand}"
+             GroupName="Navigation"
+             IsChecked="True"/>
+                <RadioButton Content="Reports"
+             Height="50"
+             Foreground="#004166"
+             FontSize="24"
+             Style="{StaticResource MenuButtonTheme}"
+             Command="{Binding ReportsButtonCommand}"
+             GroupName="Navigation"
+             IsChecked="False"/>
+                <RadioButton Content="Time Reports"
+             Visibility="{Binding IsTimeReportVisible, Converter={StaticResource BooleanToVisibilityConverter}}"  Height="50"
+             Foreground="#004166"
+             FontSize="24"
+             Style="{StaticResource MenuButtonTheme}"
+             Command="{Binding TimeReportsButtonCommand}"
+             GroupName="Navigation"
+             IsChecked="False"/>
+                <RadioButton Content="Admin"
+             Height="50"
+             Foreground="#004166"
+             FontSize="24"
+             Style="{StaticResource MenuButtonTheme}"
+             Command="{Binding AdminButtonCommand}"
+             GroupName="Navigation"
+             IsChecked="False"/>
+                <RadioButton Content="Asset Management"
+             Height="50"
+             Foreground="#004166"
+             FontSize="24"
+             Style="{StaticResource MenuButtonTheme}"
+             Command="{Binding AssetManagementTabViewModel.ShowAssetManagementCommand}"
+             GroupName="Navigation"
+             IsChecked="False"/>
+
+                <!--<Button Content="Debug User State"
+                        Height="50"
+                        Foreground="#004166"
+                        FontSize="18"  Background="Transparent" BorderThickness="0"
+                        HorizontalContentAlignment="Left" Padding="25,0,0,0" Command="{Binding OpenUserStateDebugCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FFE0E0E0"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>-->
+                <Image Margin="0,10,0,0" Source="/Resources/Full Logo.png"/>
+
+            </StackPanel>
+        </Grid>
+
+        <ContentControl Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="10 10 10 0"
+                        Content="{Binding CurrentView}">
+        </ContentControl>
+
+        <TextBlock Text="{Binding StatusText}"
+                   Margin="10 0 0 0"
+                   VerticalAlignment="Center"
+                   Foreground="#004166"
+                   FontSize="12"
+                   Grid.Column="1"
+                   Grid.Row="2">
+        </TextBlock>
+    </Grid>
+</Window>
+

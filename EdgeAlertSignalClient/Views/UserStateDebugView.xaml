@@ -1,0 +1,111 @@
+﻿<Window x:Class="EdgeAlertSignalClient.Views.UserStateDebugView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EdgeAlertSignalClient.Views"
+        xmlns:viewmodels="clr-namespace:EdgeAlertSignalClient.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:UserStateDebugViewModel}"
+        mc:Ignorable="d"
+        Title="User State Monitor" Height="400" Width="600"
+        Background="#E2F0D9">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Grid.Row="0" 
+                  Text="User State Monitor - Debug View" 
+                  FontSize="18" 
+                  FontWeight="Bold" 
+                  Margin="0,0,0,10"
+                  Foreground="#004166"/>
+
+        <!-- Current State Display -->
+        <Border Grid.Row="1" 
+               Background="#CDEAFB" 
+               Padding="10" 
+               Margin="0,0,0,10" 
+               CornerRadius="5"
+               BorderBrush="#004166"
+               BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" 
+                          Text="Current State:" 
+                          FontWeight="Bold"
+                          Foreground="#004166"
+                          VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="1" 
+                          Text="{Binding CurrentStateText}" 
+                          Margin="10,0,0,0"
+                          FontWeight="Bold"
+                          Foreground="{Binding CurrentStateBrush}"
+                          VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="Force Active" 
+                           Margin="5,0" 
+                           Padding="5,2"
+                           Command="{Binding SetActiveStateCommand}"/>
+                    <Button Content="Force Away" 
+                           Margin="5,0" 
+                           Padding="5,2"
+                           Command="{Binding SetAwayStateCommand}"/>
+                    <Button Content="Force Offline" 
+                           Margin="5,0" 
+                           Padding="5,2"
+                           Command="{Binding SetOfflineStateCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Log Entries -->
+        <ListView Grid.Row="2" 
+                 ItemsSource="{Binding LogEntries}"
+                 Background="White"
+                 BorderBrush="#004166"
+                 BorderThickness="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Time" 
+                                   DisplayMemberBinding="{Binding StateStartTime, StringFormat='{}{0:HH:mm:ss}'}" 
+                                   Width="80"/>
+                    <GridViewColumn Header="State" 
+                                   DisplayMemberBinding="{Binding State}" 
+                                   Width="80"/>
+                    <GridViewColumn Header="Duration" 
+                                   DisplayMemberBinding="{Binding DurationSeconds, StringFormat='{}{0:F1}s'}" 
+                                   Width="80"/>
+                    <GridViewColumn Header="Context" 
+                                   DisplayMemberBinding="{Binding Context}" 
+                                   Width="300"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Footer -->
+        <StackPanel Grid.Row="3" 
+                   Orientation="Horizontal" 
+                   HorizontalAlignment="Right" 
+                   Margin="0,10,0,0">
+            <Button Content="Clear Logs" 
+                   Padding="10,5"
+                   Margin="0,0,10,0"
+                   Command="{Binding ClearLogsCommand}"/>
+            <Button Content="Send Logs" 
+                   Padding="10,5"
+                   Command="{Binding SendLogsCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window>

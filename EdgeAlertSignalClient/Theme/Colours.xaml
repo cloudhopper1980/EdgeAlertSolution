@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <!-- Existing Colors -->
+  <Color x:Key="HeaderTextColor">#FF000000</Color>
+  <Color x:Key="BodyTextColor">#FFE2F0D9</Color>
+  <Color x:Key="PrimaryBackgroundColor">#FF004166</Color> <!-- Dark Blue -->
+  <Color x:Key="SecondaryBackgroundColor">#FF00ACDD</Color>
+  <Color x:Key="AccentColor">#FF96BC33</Color>
+  <Color x:Key="TableRowBackgroundColor">#FFE2F0D9</Color>
+
+  <!-- New Button Colors -->
+  <Color x:Key="ButtonBackgroundColor">#FF004166</Color>
+  <Color x:Key="ButtonForegroundColor">#FFFFFFFF</Color>
+
+  <!-- Brushes -->
+  <SolidColorBrush x:Key="HeaderTextBrush" Color="{StaticResource HeaderTextColor}" />
+  <SolidColorBrush x:Key="BodyTextBrush" Color="{StaticResource BodyTextColor}" />
+  <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="{StaticResource PrimaryBackgroundColor}" />
+  <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="{StaticResource SecondaryBackgroundColor}" />
+  <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+  <SolidColorBrush x:Key="TableRowBrush" Color="{StaticResource TableRowBackgroundColor}" />
+
+  <!-- Button Brushes -->
+  <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{StaticResource ButtonBackgroundColor}" />
+  <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{StaticResource ButtonForegroundColor}" />
+</ResourceDictionary>

@@ -1,0 +1,24 @@
+{
+  "Features": [
+    {
+      "Name": "Away-Feature",
+      "Enabled": true
+    },
+    {
+      "Name": "InternetCheck-Feature",
+      "Enabled": true
+    },
+    {
+      "Name": "CustomDomainAndIPFeature",
+      "Enabled": true
+    },
+    {
+      "Name": "AzureSync-Feature",
+      "Enabled": true
+    },
+    {
+      "Name": "UserTimeTracking-Feature",
+      "Enabled": true
+    }
+  ]
+}

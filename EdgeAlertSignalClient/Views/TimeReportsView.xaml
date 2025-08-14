@@ -1,0 +1,329 @@
+﻿<UserControl x:Class="EdgeAlertSignalClient.Views.TimeReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:EdgeAlertSignalClient.Views"
+             xmlns:vm="clr-namespace:EdgeAlertSignalClient.ViewModels"
+             xmlns:converters="clr-namespace:EdgeAlertSignalClient.Converters"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:ComponentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
+             xmlns:localViews="clr-namespace:EdgeAlertSignalClient.Views"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:TimeReportsViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="600" d:DesignWidth="800" Background="#E2F0D9">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theme/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="../Theme/TabTheme.xaml"/>
+                <ResourceDictionary Source="../Theme/GridViewTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:SecondsToTimespanConverter x:Key="SecondsToTimespanConverter"/>
+            <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
+            <converters:InverseCountToVisibilityConverter x:Key="InverseCountToVisibilityConverter"/>
+            <converters:DateTimeToTimeStringConverter x:Key="DateTimeToTimeStringConverter"/>
+            <converters:UtcToLocalDateTimeConverter x:Key="UtcToLocalConverter"/>
+            <converters:TotalTimeSpanConverter x:Key="TotalTimeSpanConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="User Time Reports" FontSize="20" FontWeight="Bold" Foreground="#004166" Margin="0,0,0,15"/>
+
+        <Border Grid.Row="1" Background="#CDEAFB" Padding="10" CornerRadius="5" BorderBrush="#004166" BorderThickness="1" Margin="0,0,0,10">
+            <StackPanel>
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <TextBlock Text="Date From:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="#004166"/>
+                        <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" DisplayDateEnd="{x:Static sys:DateTime.Now}" Margin="0,0,15,0"/>
+                        <TextBlock Text="Date To:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="#004166"/>
+                        <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" DisplayDateEnd="{x:Static sys:DateTime.Now}" Margin="0,0,15,0"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Quick Select:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="#004166"/>
+                        <ComboBox ItemsSource="{Binding DateRangeOptions}" SelectedItem="{Binding SelectedDateRange, Mode=TwoWay}" Width="120"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock Text="ODS Practice:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="#004166"/>
+                        <ComboBox ItemsSource="{Binding OdsPractices}" SelectedItem="{Binding SelectedOdsPractice, Mode=TwoWay}" Width="120" Margin="0,0,15,0"/>
+                        <TextBlock Text="User:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="SemiBold" Foreground="#004166"/>
+                        <ComboBox ItemsSource="{Binding UserNames}" SelectedItem="{Binding SelectedUserName, Mode=TwoWay}" Width="120"/>
+                    </StackPanel>
+                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Button Content="Load Report" ToolTip="Load data for the selected Custom Date Range"
+                            Width="100" Height="40" Command="{Binding LoadReportDataCommand}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                            Style="{StaticResource SupportButtonTheme}"/>
+                    <Button Content="Export" Width="80" Height="40" Margin="10,0,0,0"
+                            Command="{Binding ExportReportCommand}"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                            Style="{StaticResource SupportButtonTheme}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Margin="0,0,0,10" >
+            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <localViews:DataCardView CardTitle="Total Users Present" CardValue="{Binding TotalUsersPresentSummary}" />
+                <localViews:DataCardView CardTitle="Total Active Time" CardValue="{Binding TotalWorkHoursSummary}" />
+                <localViews:DataCardView CardTitle="Total Away Time" CardValue="{Binding TotalAwayTimeSummary}" />
+                <localViews:DataCardView CardTitle="Total Offline Time" CardValue="{Binding TotalOfflineTimeSummary}" Visibility="{Binding ShowOfflineData, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            </WrapPanel>
+        </Border>
+
+        <TabControl Grid.Row="3" Margin="0,5,0,0">
+            <TabItem Header="Summary View">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListView x:Name="SummaryListView" Grid.Column="0"
+                           ItemsSource="{Binding SummaryReportData}"
+                           ItemContainerStyle="{StaticResource ReportViewListViewItemStyle}"
+                           ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                           ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="True">
+                                <GridViewColumn Header="User ID" DisplayMemberBinding="{Binding UserID}" Width="150">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortSummaryViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                            <Setter Property="CommandParameter" Value="UserID" />
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date, StringFormat='{}{0:yyyy-MM-dd}'}" Width="100">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortSummaryViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                            <Setter Property="CommandParameter" Value="Date" />
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                </GridViewColumn>
+                                <GridViewColumn Header="ODS Practice" DisplayMemberBinding="{Binding ODS}" Width="120">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortSummaryViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                            <Setter Property="CommandParameter" Value="ODS" />
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Active Time" DisplayMemberBinding="{Binding TotalActiveSeconds, Converter={StaticResource SecondsToTimespanConverter}}" Width="100">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortSummaryViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                            <Setter Property="CommandParameter" Value="TotalActiveSeconds" />
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Away Time" DisplayMemberBinding="{Binding TotalAwaySeconds, Converter={StaticResource SecondsToTimespanConverter}}" Width="100">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortSummaryViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                            <Setter Property="CommandParameter" Value="TotalAwaySeconds" />
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Offline Time" DisplayMemberBinding="{Binding TotalOfflineSeconds, Converter={StaticResource SecondsToTimespanConverter}}" Width="100">
+                                    <GridViewColumn.HeaderContainerStyle>
+                                        <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                            <Setter Property="Command" Value="{Binding DataContext.SortSummaryViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                            <Setter Property="CommandParameter" Value="TotalOfflineSeconds" />
+                                        </Style>
+                                    </GridViewColumn.HeaderContainerStyle>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14" Background="LightGray" Padding="5,2"/>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                    </ListView>
+
+                    <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="#CDEAFB" />
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="State Time Distribution" FontWeight="Bold" FontSize="16" Foreground="#004166" HorizontalAlignment="Center" Margin="0,10,0,5"/>
+                        <CheckBox Grid.Row="1" Content="Show Offline Time"
+                               IsChecked="{Binding ShowOfflineData, Mode=TwoWay}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Margin="0,0,0,5"
+                               Foreground="#004166" FontWeight="SemiBold"/>
+                        <lvc:PieChart Grid.Row="2" Series="{Binding StatePieChartSeries}" LegendPosition="Bottom" TooltipPosition="Top" Margin="10"/>
+                        <Border Grid.Row="3" Background="#CDEAFB" Padding="10" Margin="10,5,10,10" CornerRadius="5" BorderBrush="#004166" BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="Active Time:" FontWeight="SemiBold" Foreground="#004166" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Foreground="#004166" VerticalAlignment="Center">
+         <Run Text="{Binding TotalActiveDuration, Converter={StaticResource TotalTimeSpanConverter}}"/>
+         <Run Text="{Binding TotalActivePercentage, StringFormat='({0:P1})'}"/>
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="0" Grid.Row="2" Text="Away Time:" FontWeight="SemiBold" Foreground="#004166" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Grid.Row="2" Foreground="#004166" VerticalAlignment="Center">
+         <Run Text="{Binding TotalAwayDuration, Converter={StaticResource TotalTimeSpanConverter}}"/>
+         <Run Text="{Binding TotalAwayPercentage, StringFormat='({0:P1})'}"/>
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="0" Grid.Row="3" Text="Offline Time:" FontWeight="SemiBold" Foreground="#004166" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <Grid Grid.Column="1" Grid.Row="3" VerticalAlignment="Center">
+                                    <TextBlock Foreground="#004166" Visibility="{Binding ShowOfflineData, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+             <Run Text="{Binding TotalOfflineDuration, Converter={StaticResource TotalTimeSpanConverter}}"/>
+             <Run Text="{Binding TotalOfflinePercentage, StringFormat='({0:P1})'}"/>
+                                    </TextBlock>
+                                    <TextBlock Foreground="#004166" Visibility="{Binding ShowOfflineData, Converter={StaticResource InverseBooleanConverter}, FallbackValue=Collapsed}">
+             <Run Text="(Hidden)"/>
+                                    </TextBlock>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Daily Presence">
+                <Grid>
+                    <Grid Visibility="{Binding IsDailyActivityVisible, Converter={StaticResource InverseBooleanConverter}}">
+                        <TextBlock Text="Load report data to view daily presence." Foreground="Gray" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding PresenceHeatMapSeries.Length, Converter={StaticResource InverseCountToVisibilityConverter}}"/>
+                        <lvc:CartesianChart Series="{Binding PresenceHeatMapSeries}" XAxes="{Binding PresenceXAxes}" YAxes="{Binding PresenceYAxes}" TooltipPosition="Top" ZoomMode="Both" Margin="5" Visibility="{Binding PresenceHeatMapSeries.Length, Converter={StaticResource CountToVisibilityConverter}}" DataPointerDownCommand="{Binding DrillDownToActivityChartCommand}" />
+                    </Grid>
+                    <Grid Visibility="{Binding IsDailyActivityVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="0" Content="&lt; Back to Heatmap" Command="{Binding GoBackToHeatmapCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Padding="5,2" Style="{StaticResource SupportButtonTheme}" Background="LightGray"/>
+                        <lvc:CartesianChart Grid.Row="1" Series="{Binding DailyActivitySeries}" XAxes="{Binding DailyActivityXAxis}" YAxes="{Binding DailyActivityYAxis}" TooltipPosition="Top" ZoomMode="X" Margin="5" />
+                        <TextBlock Grid.Row="1" Text="{Binding StatusMessage}" Foreground="#004166" FontStyle="Italic" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding DailyActivitySeries.Length, Converter={StaticResource InverseCountToVisibilityConverter}}"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+
+            <TabItem Header="Detailed View">
+                <ListView x:Name="DetailedListView" ItemsSource="{Binding DetailedReportData}" ItemContainerStyle="{StaticResource ReportViewListViewItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="True">
+                            <GridViewColumn Header="User Name" DisplayMemberBinding="{Binding UserName}" Width="150">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortDetailedViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Setter Property="CommandParameter" Value="UserName" />
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Machine ID" DisplayMemberBinding="{Binding MachineID}" Width="150">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortDetailedViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Setter Property="CommandParameter" Value="MachineID" />
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                            </GridViewColumn>
+                            <GridViewColumn Header="State" DisplayMemberBinding="{Binding State}" Width="80">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortDetailedViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Setter Property="CommandParameter" Value="State" />
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Start Time" Width="160">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortDetailedViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Setter Property="CommandParameter" Value="StateStartTime" />
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding StateStartTime, Converter={StaticResource UtcToLocalConverter}, StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Duration" Width="120">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortDetailedViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Setter Property="CommandParameter" Value="CalculatedDurationSeconds" />
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CalculatedDurationSeconds, Converter={StaticResource SecondsToTimespanConverter}}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="ODS" DisplayMemberBinding="{Binding ODS}" Width="100">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortDetailedViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Setter Property="CommandParameter" Value="ODS" />
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Context" DisplayMemberBinding="{Binding Context}" Width="200">
+                                <GridViewColumn.HeaderContainerStyle>
+                                    <Style TargetType="GridViewColumnHeader" BasedOn="{StaticResource GridViewColumnHeaderBaseStyle}">
+                                        <Setter Property="Command" Value="{Binding DataContext.SortDetailedViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" />
+                                        <Setter Property="CommandParameter" Value="Context" />
+                                    </Style>
+                                </GridViewColumn.HeaderContainerStyle>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+
+        </TabControl>
+
+        <TextBlock Grid.Row="4" Text="{Binding StatusMessage}" Foreground="#004166" FontStyle="Italic" Margin="0,10,0,0"/>
+
+        <Grid Grid.Row="0" Grid.RowSpan="5" Background="#80FFFFFF" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="Working..." HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#004166" FontSize="16"/>
+        </Grid>
+
+    </Grid>
+</UserControl>

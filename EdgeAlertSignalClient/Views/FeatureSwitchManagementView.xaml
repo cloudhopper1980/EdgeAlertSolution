@@ -1,0 +1,277 @@
+﻿<UserControl x:Class="EdgeAlertSignalClient.Views.FeatureSwitchManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:EdgeAlertSignalClient.Views"
+             xmlns:vm="clr-namespace:EdgeAlertSignalClient.ViewModels"
+             xmlns:converters="clr-namespace:EdgeAlertSignalClient.Converters"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=vm:FeatureSwitchManagementViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="600" d:DesignWidth="800" Background="#E2F0D9"
+             x:Name="FeatureSwitchRoot">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Theme/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="../Theme/TabTheme.xaml"/>
+                <ResourceDictionary Source="../Theme/GridViewTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+            <Style TargetType="ListBoxItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            </Style>
+            <Style x:Key="FeatureToggleStyle" TargetType="ToggleButton">
+                <Setter Property="MinWidth" Value="60"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Background" Value="LightGreen"/>
+                        <Setter Property="Content" Value="ON"/>
+                    </Trigger>
+                    <Trigger Property="IsChecked" Value="False">
+                        <Setter Property="Background" Value="LightCoral"/>
+                        <Setter Property="Content" Value="OFF"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <converters:NullableBooleanToIndeterminateConverter x:Key="NullableBooleanToIndeterminateConverter"/>
+            <converters:NullToFalseConverter x:Key="NullToFalseConverter"/>
+            <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" FontSize="18" FontWeight="Bold" Foreground="#004166" Margin="0,0,0,5">
+            <Run Text="Feature Control:"/>
+            <Run Text="{Binding SelectedFeature, TargetNullValue='(Select a Feature)'}"/>
+        </TextBlock>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Select Feature:" VerticalAlignment="Center" Margin="0,0,5,0" Foreground="#004166"/>
+            <ComboBox ItemsSource="{Binding AvailableFeatures}"
+                      SelectedItem="{Binding SelectedFeature, Mode=TwoWay}"
+                      MinWidth="250"
+                      IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" BorderBrush="#004166" BorderThickness="1" CornerRadius="5" Padding="10" Margin="0,0,0,10" Background="WhiteSmoke"
+                IsEnabled="{Binding SelectedFeature}">
+            <Grid DataContext="{Binding GlobalSetting}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding DisplayName}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Text="(Applies if no specific User or ODS setting exists)" FontStyle="Italic" Foreground="Gray" VerticalAlignment="Center" Margin="10,0"/>
+                <ToggleButton Grid.Column="2"
+                          Style="{StaticResource FeatureToggleStyle}"
+                          IsChecked="{Binding IsToggleChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Command="{Binding DataContext.ToggleSettingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"  CommandParameter="{Binding}"
+                          ToolTip="Enable/Disable selected feature globally"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3"
+                Margin="0,0,0,10"
+                Padding="10"
+                BorderBrush="#004166"
+                BorderThickness="1"
+                CornerRadius="5"
+                Background="WhiteSmoke"
+                IsEnabled="{Binding SelectedFeature, Converter={StaticResource NullToFalseConverter}}">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="Bulk Actions for Selected Feature:" FontWeight="SemiBold" Foreground="#004166" Margin="0,0,0,10"/>
+                <WrapPanel HorizontalAlignment="Center">
+                    <Button Content="Set All ODS ON"
+                            Width="150" Height="50" Margin="5"
+                            Style="{StaticResource SupportButtonTheme}"
+                            Background="DarkSeaGreen"
+                            Command="{Binding SetAllOdsOnCommand}"
+                            ToolTip="Sets the selected feature ON for ALL ODS entries."/>
+                    <Button Content="Set All ODS OFF"
+                            Width="150" Height="50" Margin="5"
+                            Style="{StaticResource SupportButtonTheme}"
+                            Background="OrangeRed"
+                            Command="{Binding SetAllOdsOffCommand}"
+                            ToolTip="Sets the selected feature OFF for ALL ODS entries."/>
+                    <Button Content="Clear All ODS"
+                            Width="150" Height="50" Margin="5"
+                            Style="{StaticResource SupportButtonTheme}"
+                            Background="LightSteelBlue" Command="{Binding ClearAllOdsOverridesCommand}"
+                            ToolTip="Clears ALL ODS-specific settings for this feature, causing them to inherit from Global."/>
+
+                    <Separator Width="1" Height="40" Margin="15,5,15,5" Background="Transparent"/>
+
+                    <Button Content="Set All Users ON"
+                            Width="160" Height="50" Margin="5"
+                            Style="{StaticResource SupportButtonTheme}"
+                            Background="DarkSeaGreen"
+                            Command="{Binding SetAllUsersOnCommand}"
+                            ToolTip="Sets the selected feature ON for ALL User entries."/>
+                    <Button Content="Set All Users OFF"
+                            Width="160" Height="50" Margin="5"
+                            Style="{StaticResource SupportButtonTheme}"
+                            Background="OrangeRed"
+                            Command="{Binding SetAllUsersOffCommand}"
+                            ToolTip="Sets the selected feature OFF for ALL User entries."/>
+                    <Button Content="Clear All Users"
+                            Width="160" Height="50" Margin="5"
+                            Style="{StaticResource SupportButtonTheme}"
+                            Background="LightSteelBlue" Command="{Binding ClearAllUserOverridesCommand}"
+                            ToolTip="Clears ALL User-specific settings for this feature, causing them to inherit from ODS or Global."/>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+
+
+        <Grid Grid.Row="4" IsEnabled="{Binding SelectedFeature}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="ODS Specific Settings" BorderBrush="#004166">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBox Grid.Row="0" Text="{Binding OdsSearchText, UpdateSourceTrigger=PropertyChanged}" Margin="5" ToolTip="Search by Practice Name or ODS Code"/>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding OdsSettings}" HorizontalContentAlignment="Stretch" Margin="5" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Padding="5,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" ToolTip="{Binding Identifier}"/>
+                                            <TextBlock FontSize="10" FontStyle="Italic" Foreground="DarkGray">
+                                        <Run Text="Explicit: "/>
+                                        <Run Text="{Binding ExplicitIsEnabled, TargetNullValue='Inherited'}"/>
+                                        <Run Text=" / Effective: "/>
+                                        <Run Text="{Binding EffectiveIsEnabled}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1" Text="*" Foreground="Blue" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"
+                                           Visibility="{Binding ExplicitIsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                           ToolTip="Setting is explicitly defined for this ODS"/>
+
+                                        <ToggleButton Grid.Column="2"
+                                              Style="{StaticResource FeatureToggleStyle}"
+                                              IsChecked="{Binding IsToggleChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Command="{Binding DataContext.ToggleSettingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding}"
+                                              ToolTip="Enable/Disable selected feature for this specific ODS"/>
+
+                                        <Button Grid.Column="3" Content="X"
+                                            Command="{Binding ElementName=FeatureSwitchRoot, Path=DataContext.ClearOverrideCommand}"
+                                            CommandParameter="{Binding}"
+                                            Visibility="{Binding ExplicitIsEnabled, Converter={StaticResource NullToVisibilityConverter}}"
+                                            ToolTip="Clear ODS-specific setting and inherit"
+                                            Margin="5,0,0,0" VerticalAlignment="Center"
+                                            Width="25" Height="25" Padding="0"
+                                            Background="LightGray" Foreground="DarkRed" FontWeight="Bold"
+                                            BorderThickness="1" BorderBrush="DimGray"/>
+
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </GroupBox>
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="LightGray"/>
+
+            <GroupBox Grid.Column="2" Header="User Specific Settings" BorderBrush="#004166">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBox Grid.Row="0" Text="{Binding UserSearchText, UpdateSourceTrigger=PropertyChanged}" Margin="5" ToolTip="Search by Username"/>
+                    <ListBox Grid.Row="1" ItemsSource="{Binding UserSettings}" HorizontalContentAlignment="Stretch" Margin="5" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="LightGray" BorderThickness="0,0,0,1" Padding="5,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold"/>
+                                            <TextBlock FontSize="10" FontStyle="Italic" Foreground="DarkGray">
+                                        <Run Text="Explicit: "/>
+                                        <Run Text="{Binding ExplicitIsEnabled, TargetNullValue='Inherited'}"/>
+                                        <Run Text=" / Effective: "/>
+                                        <Run Text="{Binding EffectiveIsEnabled}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1" Text="*" Foreground="Blue" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0"
+                                           Visibility="{Binding ExplicitIsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                           ToolTip="Setting is explicitly defined for this User"/>
+
+                                        <ToggleButton Grid.Column="2"
+                                              Style="{StaticResource FeatureToggleStyle}"
+                                              IsChecked="{Binding IsToggleChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Command="{Binding DataContext.ToggleSettingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding}"
+                                              ToolTip="Enable/Disable selected feature for this specific User"/>
+
+                                        <Button Grid.Column="3" Content="X"
+                                            Command="{Binding ElementName=FeatureSwitchRoot, Path=DataContext.ClearOverrideCommand}"
+                                            CommandParameter="{Binding}"
+                                            Visibility="{Binding ExplicitIsEnabled, Converter={StaticResource NullToVisibilityConverter}}"
+                                            ToolTip="Clear User-specific setting and inherit"
+                                            Margin="5,0,0,0" VerticalAlignment="Center"
+                                            Width="25" Height="25" Padding="0"
+                                            Background="LightGray" Foreground="DarkRed" FontWeight="Bold"
+                                            BorderThickness="1" BorderBrush="DimGray"/>
+
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </GroupBox>
+        </Grid>
+
+        <StatusBar Grid.Row="5" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusMessage}" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <ProgressBar IsIndeterminate="{Binding IsBusy}" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" Width="100" Height="15"/>
+            </StatusBarItem>
+        </StatusBar>
+
+    </Grid>
+</UserControl>

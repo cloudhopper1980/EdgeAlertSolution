@@ -1,0 +1,42 @@
+﻿<Window x:Class="EdgeAlertSignalClient.Views.IconView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EdgeAlertSignalClient.Views"
+        xmlns:converters="clr-namespace:EdgeAlertSignalClient.Converters"
+        mc:Ignorable="d"
+        WindowStartupLocation="Manual"
+        Left="{Binding Source={x:Static SystemParameters.PrimaryScreenWidth}, Converter={StaticResource ScreenWidthToWindowLeftConverter}, ConverterParameter=50}"
+        Top="{Binding Source={x:Static SystemParameters.PrimaryScreenHeight}, Path=Top, Converter={StaticResource ScreenHeightToWindowTopConverter}, ConverterParameter=50}"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        Title="IconView" Height="50" Width="50">
+    <Window.Resources>
+        <converters:StringToBrushConverter x:Key="StringToBrushConverter" />
+    </Window.Resources>
+    <Window.Visibility>
+        <Binding Path="IconVisibility" Mode="TwoWay"/>
+    </Window.Visibility>
+    <Border CornerRadius="50" BorderThickness="4" MouseDown="Border_MouseDown">
+        <Border.Background>
+            <RadialGradientBrush>
+                <GradientStop Color="{Binding BackgroundColor}" Offset="0.6"/>
+                <GradientStop Color="{Binding BackgroundColorDark}" Offset="1"/>
+            </RadialGradientBrush>
+        </Border.Background>
+        <Border.BorderBrush>
+            <Binding Path="BorderColor" Converter="{StaticResource StringToBrushConverter}"/>
+        </Border.BorderBrush>
+        <Border.InputBindings>
+            <MouseBinding MouseAction="RightClick" Command="{Binding RightClickCloseCommand}"/>
+            <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding DoubleClickAlertCommand}"/>
+        </Border.InputBindings>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Image Margin="8" Source="pack://application:,,,/Resources/edgebits_icon.png"/>
+        </Grid>
+    </Border>
+</Window>
